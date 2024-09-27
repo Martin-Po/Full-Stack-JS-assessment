@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Box, ListItem, ListItemText, Typography } from '@mui/material'
+import { Box, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material'
 import countryService from '../services/countries'
 import { useEffect, useState } from 'react'
 import { LineChart } from '@mui/x-charts/LineChart'
@@ -68,14 +68,14 @@ const CountryInfo = () => {
                 {country.borders &&
                     country.borders.map((border) => {
                         return (
-                            <ListItem
+                            <ListItemButton key={border.countryCode}
                                 button
                                 onClick={() =>
                                     handleNavigation(border.countryCode)
                                 }
                             >
                                 <ListItemText primary={border.commonName} />
-                            </ListItem>
+                            </ListItemButton>
                         )
                     })}
 

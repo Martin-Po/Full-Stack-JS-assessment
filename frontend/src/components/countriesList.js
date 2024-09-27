@@ -1,8 +1,23 @@
 import { useNavigate } from 'react-router-dom'
 
-import { ListItem, ListItemText } from '@mui/material'
+import { ListItem, ListItemButton, ListItemText } from '@mui/material'
 
-const CountriesList = ({ countries }) => {
+import { useEffect, useState } from 'react'
+
+import countryService from '../services/countries'
+
+const CountriesList = () => {
+
+    const [countries, setCountries] = useState([])
+
+
+    useEffect(() => {
+        countryService.getAll().then((countries) => setCountries(countries))
+    }, [])
+
+    countryService.getAll()
+
+
     const navigate = useNavigate()
 
     const handleNavigation = (countryCode) => {
@@ -13,15 +28,16 @@ const CountriesList = ({ countries }) => {
         <div className="App">
             {countries &&
                 countries.map((country) => {
-                    return (
-                        <ListItem
-                            button
+                    return (                      
+
+                        <ListItemButton  key={country.countryCode}
+                            
                             onClick={() =>
                                 handleNavigation(country.countryCode)
                             }
                         >
                             <ListItemText primary={country.name} />
-                        </ListItem>
+                        </ListItemButton >
                     )
                 })}
         </div>
