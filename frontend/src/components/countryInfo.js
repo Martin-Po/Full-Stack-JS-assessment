@@ -1,11 +1,21 @@
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Box, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material'
+import {
+    Box,
+    Grid,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    Skeleton,
+    Typography,
+} from '@mui/material'
 import countryService from '../services/countries'
 import { useEffect, useState } from 'react'
 import { LineChart } from '@mui/x-charts/LineChart'
 
 const CountryInfo = () => {
+    const [loaded, setloaded] = useState(false)
+
     const [country, setCountry] = useState([])
     const [chartParams, setChartParams] = useState({ x: [], y: [] })
 
@@ -19,6 +29,7 @@ const CountryInfo = () => {
             .then((country) => {
                 setCountry(country)
                 setError(null)
+                setloaded(true)
             })
             .catch((error) => {
                 console.error('Error fetching country info:', error)
@@ -27,7 +38,6 @@ const CountryInfo = () => {
     }, [countryCode])
 
     useEffect(() => {
-
         if (country.population !== 'error' && country.population) {
             let X = []
             let Y = []
@@ -42,12 +52,52 @@ const CountryInfo = () => {
     const navigate = useNavigate()
 
     const handleNavigation = (countryCode) => {
+        setloaded(false)
+        setCountry([])
         navigate(`/info/${countryCode}`)
     }
 
+    if (!loaded) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+
+                    justifyContent: 'center',
+                    marginBottom: '5rem',
+                }}
+            >
+                <Skeleton width="40%" />
+
+                <Skeleton variant="rectangular" width={210} height={118} />
+
+                <Box sx={{ pt: 0.5 }}>
+                    <Skeleton width="30%" />
+                    <Skeleton width="15%" />
+
+                    <Skeleton width="10%" />
+
+                    <Skeleton width="12%" />
+                </Box>
+
+                <Skeleton variant="rectangular" width={250} height={250} />
+            </Box>
+        )
+    }
+
     return (
-        <Box>
-            <Typography>{country.officialName}</Typography>
+        <Box
+            sx={{
+                width: '100vw',
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+            }}
+        >
+            <Typography sx={{ textAlign: 'start' }}>
+                {country.officialName}
+            </Typography>
             <Box
                 sx={{
                     display: 'flex',
@@ -61,34 +111,49 @@ const CountryInfo = () => {
                     src={country.flag}
                     alt={`${country.officialName} flag`}
                 />
-                <Typography sx={{ fontWeight: 'bold' }}>
-                    Boder countries
-                </Typography>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        width: '100%',
+                        flexDirection: 'column',
+                    }}
+                >
+                    <Box>
+                        <Typography
+                            sx={{ textAlign: 'start', fontWeight: 'bold' }}
+                        >
+                            Boder countries
+                        </Typography>
 
-                {country.borders &&
-                    country.borders.map((border) => {
-                        return (
-                            <ListItemButton key={border.countryCode}
-                                button
-                                onClick={() =>
-                                    handleNavigation(border.countryCode)
-                                }
-                            >
-                                <ListItemText primary={border.commonName} />
-                            </ListItemButton>
-                        )
-                    })}
-
-                <LineChart
-                    xAxis={[{ data: chartParams.x }]}
-                    series={[
-                        {
-                            data: chartParams.y,
-                        },
-                    ]}
-                    width={500}
-                    height={300}
-                />
+                        {country.borders &&
+                            country.borders.map((border) => {
+                                return (
+                                    <ListItemButton
+                                        key={border.countryCode}
+                                        onClick={() =>
+                                            handleNavigation(border.countryCode)
+                                        }
+                                    >
+                                        <ListItemText
+                                            primary={border.commonName}
+                                        />
+                                    </ListItemButton>
+                                )
+                            })}
+                    </Box>
+                    <Box>
+                        <LineChart
+                            xAxis={[{ data: chartParams.x }]}
+                            series={[
+                                {
+                                    data: chartParams.y,
+                                },
+                            ]}
+                            width={500}
+                            height={300}
+                        />
+                    </Box>
+                </Box>
             </Box>
         </Box>
     )
