@@ -1,7 +1,15 @@
 require('dotenv').config()
 
-const PORT = process.env.PORT 
+const PORT = process.env.PORT
+COUNTRIES_URL = process.env.COUNTRIES_URL
+COUNTRY_INFO_URL = process.env.COUNTRY_INFO_URL
+COUNTRY_POPULATION_URL = process.env.COUNTRY_POPULATION_URL
+COUNTRY_FLAG_URL = process.env.COUNTRY_FLAG_URL
 
 module.exports = {
-    PORT
+    PORT,
+    COUNTRIES_URL,
+    COUNTRY_INFO_URL,
+    COUNTRY_POPULATION_URL,
+    COUNTRY_FLAG_URL,
 }
