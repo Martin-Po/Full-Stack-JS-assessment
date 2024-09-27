@@ -19,6 +19,12 @@ countriesRouter.get('/:country', async (request, response) => {
     const countryCode = request.params.country
     let CompleteCountry = {}
     let errors = []
+    console.log('code');
+    console.log(countryCode);
+    console.log('code');
+
+    
+    
 
     try {
         const { data: country } = await axios.get(
@@ -38,6 +44,7 @@ countriesRouter.get('/:country', async (request, response) => {
         )
         CompleteCountry.population = population.data.populationCounts
     } catch (exception) {
+        CompleteCountry.population = "error"
         errors.push({ error: 'Failed to fetch country population' })
     }
 
@@ -47,14 +54,12 @@ countriesRouter.get('/:country', async (request, response) => {
         })
         CompleteCountry.flag = flags.data.flag
     } catch (exception) {
+        CompleteCountry.flag = "error"
         errors.push({ error: 'Failed to fetch country flag' })
     }
 
-    if (errors.length > 0) {
-        response.status(500).json({ errors, data: CompleteCountry })
-    } else {
-        response.json(CompleteCountry)
-    }
+   
+        response.json( CompleteCountry)
 })
 
 module.exports = countriesRouter
