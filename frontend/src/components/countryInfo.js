@@ -27,8 +27,6 @@ const CountryInfo = () => {
     }, [countryCode])
 
     useEffect(() => {
-        console.log('here it is')
-        console.log(country.population)
 
         if (country.population !== 'error' && country.population) {
             let X = []
@@ -38,7 +36,6 @@ const CountryInfo = () => {
                 Y.push(population.value)
             })
             setChartParams({ x: X, y: Y })
-            console.log(X)
         }
     }, [country])
 
